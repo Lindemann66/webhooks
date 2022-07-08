@@ -2,6 +2,7 @@
 
 FactoryBot.define do
   factory :organization do
+    user
     name { Faker::Company.name }
   end
 end

@@ -10,13 +10,9 @@ class ProjectsController < ApplicationController
   end
 
   def create
-    @project = @organization.projects.build(project_params)
-
-    if @project.save
-      render json: ProjectSerializer.new(@project).serializable_hash
-    else
-      render json: { errors: @project.errors.full_messages }, status: :unprocessable_entity
-    end
+    render json: Project::CreateService.new(organization: @organization, params: project_params).run
+  rescue Project::CreateService::Error => e
+    render json: { errors: JSON.parse(e.message) }, status: :unprocessable_entity
   end
 
   def show

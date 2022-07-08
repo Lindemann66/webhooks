@@ -3,6 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe TasksController, type: :controller do
+  before { sign_in_api_user }
+
   describe 'GET #index' do
     let!(:project1) { create(:project) }
     let!(:project2) { create(:project) }
