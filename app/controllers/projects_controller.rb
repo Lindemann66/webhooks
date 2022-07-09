@@ -6,7 +6,7 @@ class ProjectsController < ApplicationController
   before_action :find_project, only: %i[show update destroy]
 
   def index
-    render json: ProjectSerializer.new(@organization.projects).serializable_hash
+    render json: Project::IndexService.new(organization: @organization).run
   end
 
   def create
@@ -16,19 +16,17 @@ class ProjectsController < ApplicationController
   end
 
   def show
-    render json: ProjectSerializer.new(@project).serializable_hash
+    render json: Project::ShowService.new(project: @project).run
   end
 
   def update
-    if @project.update(project_params)
-      render json: ProjectSerializer.new(@project).serializable_hash
-    else
-      render json: { errors: @project.errors.full_messages }, status: :unprocessable_entity
-    end
+    render json: Project::UpdateService.new(project: @project, params: project_params).run
+  rescue Project::UpdateService::Error => e
+    render json: { errors: JSON.parse(e.message) }, status: :unprocessable_entity
   end
 
   def destroy
-    @project.destroy
+    Project::DestroyService.new(project: @project).run
     head :ok
   end
 

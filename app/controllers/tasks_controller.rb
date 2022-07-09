@@ -6,33 +6,27 @@ class TasksController < ApplicationController
   before_action :find_task, only: %i[show update destroy]
 
   def index
-    render json: TaskSerializer.new(@project.tasks).serializable_hash
+    render json: Task::IndexService.new(project: @project).run
   end
 
   def create
-    @task = @project.tasks.build(task_params)
-
-    if @task.save
-      render json: TaskSerializer.new(@task).serializable_hash
-    else
-      render json: { errors: @task.errors.full_messages }, status: :unprocessable_entity
-    end
+    render json: Task::CreateService.new(project: @project, params: task_params).run
+  rescue Task::CreateService::Error => e
+    render json: { errors: JSON.parse(e.message) }, status: :unprocessable_entity
   end
 
   def show
-    render json: TaskSerializer.new(@task).serializable_hash
+    render json: Task::ShowService.new(task: @task).run
   end
 
   def update
-    if @task.update(task_params)
-      render json: TaskSerializer.new(@task).serializable_hash
-    else
-      render json: { errors: @task.errors.full_messages }, status: :unprocessable_entity
-    end
+    render json: Task::UpdateService.new(task: @task, params: task_params).run
+  rescue Task::UpdateService::Error => e
+    render json: { errors: JSON.parse(e.message) }, status: :unprocessable_entity
   end
 
   def destroy
-    @task.destroy
+    Task::DestroyService.new(task: @task).run
     head :ok
   end
 

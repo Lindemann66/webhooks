@@ -1,12 +1,9 @@
 # frozen_string_literal: true
 
-# Top-level entity; helps provide an authentication.
+# Provides the basic authentication on the 'model level'; probably will be the top-level model in the future.
 class User < ApplicationRecord
   devise :database_authenticatable
 
-  has_many :organizations, dependent: :destroy
-  has_many :projects, through: :organizations
-
-  validates :email, presence: true # , email: true, uniqueness: true
+  validates :email, presence: true, uniqueness: true
   validates :password, presence: true
 end
