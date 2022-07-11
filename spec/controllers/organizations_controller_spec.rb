@@ -3,6 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe OrganizationsController, type: :controller do
+  before { sign_in_api_user }
+
   describe 'GET #show' do
     context 'when organization exists' do
       let!(:organization) { create(:organization) }

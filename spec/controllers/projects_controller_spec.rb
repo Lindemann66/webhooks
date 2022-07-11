@@ -3,6 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe ProjectsController, type: :controller do
+  before { sign_in_api_user }
+
   describe 'GET #index' do
     let!(:organization1) { create(:organization) }
     let!(:organization2) { create(:organization) }

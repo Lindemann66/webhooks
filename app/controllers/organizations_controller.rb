@@ -3,7 +3,6 @@
 # Exposes API for interacting with Organizations.
 class OrganizationsController < ApplicationController
   def show
-    @organization = Organization.find(params[:id])
-    render json: OrganizationSerializer.new(@organization).serializable_hash
+    render json: Organization::ShowService.new(organization_id: params[:id]).run
   end
 end
