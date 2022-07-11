@@ -207,7 +207,7 @@ RSpec.describe TasksController, type: :controller do
       end
     end
 
-    context 'when task does not exist for organization' do
+    context 'when task does not exist for project' do
       let!(:project1) { create(:project) }
       let!(:project2) { create(:project) }
       let!(:task1) { create(:task, project: project1) }
